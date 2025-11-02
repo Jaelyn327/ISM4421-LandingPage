@@ -29,7 +29,8 @@ echo ""
 if [ -d .git ]; then
     echo "Git repository already exists."
     read -p "Do you want to reinitialize it? This will keep your files but reset Git history. (Y/N): " reinit
-    if [[ "${reinit,,}" == "y" ]]; then
+    reinit_lower=$(echo "$reinit" | tr '[:upper:]' '[:lower:]')
+    if [[ "$reinit_lower" == "y" ]]; then
         echo "Removing existing .git directory..."
         rm -rf .git
         echo "Initializing new Git repository with main branch..."
@@ -39,7 +40,8 @@ if [ -d .git ]; then
 else
     echo "No Git repository found."
     read -p "Initialize new Git repository? (Y/N): " first_time
-    if [[ "${first_time,,}" == "y" ]]; then
+    first_time_lower=$(echo "$first_time" | tr '[:upper:]' '[:lower:]')
+    if [[ "$first_time_lower" == "y" ]]; then
         echo "Initializing new Git repository with main branch..."
         git init -b main
         echo ""
@@ -60,11 +62,13 @@ current_branch=$(git branch --show-current)
 echo "Current branch: $current_branch"
 
 # If on master, ask to rename to main
-if [[ "${current_branch,,}" == "master" ]]; then
+current_branch_lower=$(echo "$current_branch" | tr '[:upper:]' '[:lower:]')
+if [[ "$current_branch_lower" == "master" ]]; then
     echo ""
     echo "WARNING: You are on 'master' branch, not 'main'."
     read -p "Rename 'master' to 'main'? (Y/N): " rename_branch
-    if [[ "${rename_branch,,}" == "y" ]]; then
+    rename_branch_lower=$(echo "$rename_branch" | tr '[:upper:]' '[:lower:]')
+    if [[ "$rename_branch_lower" == "y" ]]; then
         git branch -M main
         current_branch="main"
         echo "Branch renamed to main"
@@ -88,8 +92,9 @@ echo ""
 echo "WARNING: This will FORCE PUSH to the repository, potentially overwriting remote changes."
 echo "This makes the remote repository match your local repository exactly."
 read -p "Are you sure you want to force push? (Y/N): " confirm
+confirm_lower=$(echo "$confirm" | tr '[:upper:]' '[:lower:]')
 
-if [[ "${confirm,,}" == "y" ]]; then
+if [[ "$confirm_lower" == "y" ]]; then
     echo "Pushing to GitHub repository: $repo_url"
     git push -f -u origin "$current_branch"
 else
